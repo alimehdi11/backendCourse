@@ -1,0 +1,21 @@
+{
+  "name": "project1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [
+    "nodejs",
+    "express"
+  ],
+  "author": "khizar",
+  "type": "module",
+  "license": "ISC",
+  "description": "create my first practice project",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.2.1"
+  }
+}
