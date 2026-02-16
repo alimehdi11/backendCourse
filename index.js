@@ -1,7 +1,7 @@
 import express from "express";
 import studentRouter from "./src/features/student/studentRouter.js";
-import connectDB from "./src/features/config/db.js";
-import { config } from "./src/features/config/config.js";
+import connectDB from "./src/config/db.js";
+import { config } from "./src/config/config.js";
 
 const app = express();
 app.use(express.json());
@@ -30,3 +30,7 @@ app.listen(PORT, () => {
 ============================== */
 
 connectDB();
+
+
+
+
