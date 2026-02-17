@@ -2,6 +2,7 @@ import express from "express";
 import studentRouter from "./src/features/student/studentRouter.js";
 import connectDB from "./src/config/db.js";
 import { config } from "./src/config/config.js";
+import { errorHandler } from "./src/middlewares/errorMiddleware.js";
 
 const app = express();
 app.use(express.json());
@@ -31,6 +32,9 @@ app.listen(PORT, () => {
 
 connectDB();
 
+// Global error handler
+
+app.use(errorHandler);
 
 
 
