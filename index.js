@@ -3,18 +3,20 @@ import studentRouter from "./src/features/student/studentRouter.js";
 import connectDB from "./src/config/db.js";
 import { config } from "./src/config/config.js";
 import { errorHandler } from "./src/middlewares/errorMiddleware.js";
+import bookRouter from "./src/features/book/bookRouter.js";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const PORT = config.port;
+const PORT = config.PORT;
 
 /* ==============================
    APIS
 ============================== */
 
-app.use("/api/students",studentRouter)
+app.use("/api/students", studentRouter);
+app.use("/api/books", bookRouter);
 
 
 
