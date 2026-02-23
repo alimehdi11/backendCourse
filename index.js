@@ -4,11 +4,11 @@ import connectDB from "./src/config/db.js";
 import { config } from "./src/config/config.js";
 import { errorHandler } from "./src/middlewares/errorMiddleware.js";
 import bookRouter from "./src/features/book/bookRouter.js";
-
+import cors from "cors";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cors({origin: config.FRONTEND_ORIGIN}));
 const PORT = config.PORT;
 
 /* ==============================

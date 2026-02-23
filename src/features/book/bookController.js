@@ -25,18 +25,39 @@ export const updateBook = asyncHandler(async (req, res) => {
 })
 
 export const getBooks = asyncHandler(async (req, res) => {
-    let { page = 1, limit = 10, sort = "-createdAt", fields, ...filters } = req.query;
-    page = parseInt(page);
-    limit = parseInt(limit);
-    const skip = (page - 1) * limit;
-    let query = Book.find(filters);
-    query = query.sort(sort).skip(skip).limit(limit);
-    if (fields) query = query.select(fields.replace(",", " "));
-    const [books, total] = await Promise.all([query, Book.countDocuments(filters),]);
-    const pages = Math.ceil(total / limit);
-    sendResponse(res, {
-        message: "Books fetched successfully",
-        data: books,
-        meta: { total, page, pages, limit },
-    });
+
+  let { page = 1, limit = 10, sort = "-createdAt", fields, bookName, writer, ...filters } = req.query;
+
+  page = parseInt(page);
+  limit = parseInt(limit);
+  const skip = (page - 1) * limit;
+
+  // If bookName is provided, use regex for case-insensitive match
+  if (bookName) {
+    filters.bookName = { $regex: bookName, $options: "i" }; // 'i' makes it case-insensitive  
+}
+
+  if (writer) {
+    filters.writer = { $regex: writer, $options: "i" }; // 'i' makes it case-insensitive  
+}
+console.log(writer)
+  let query = Book.find(filters)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit);
+
+  if (fields) query = query.select(fields.replace(",", " "));
+
+  const [books, total] = await Promise.all([
+    query,
+    Book.countDocuments(filters),
+  ]);
+
+  const pages = Math.ceil(total / limit);
+
+  sendResponse(res, {
+    message: "Books fetched successfully",
+    data: books,
+    meta: { total, page, pages, limit },
+  });
 });

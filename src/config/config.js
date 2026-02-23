@@ -12,6 +12,7 @@ const _config = {
     PORT: process.env.PORT,
     DB_URL: process.env.DB_URL,
     NODE_ENV,
+    FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN,
 };
 
 export const config = Object.freeze(_config);

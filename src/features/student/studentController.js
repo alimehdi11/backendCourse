@@ -1,5 +1,6 @@
 import { asyncHandler, sendResponse } from "../../utils/helperFunctions.js";
 import Student from "./studentModel.js";
+import createError from "http-errors";
 
 
 export const createStudent = asyncHandler(async (req, res) => {
@@ -9,23 +10,23 @@ export const createStudent = asyncHandler(async (req, res) => {
 
 
 // GET BY ID
-export const getStudentById = asyncHandler(async (req, res) => {
+export const getStudentById = asyncHandler(async (req, res,next) => {
     const student = await Student.findById(req.params.id);
-    if (!student) return sendResponse(res, { status: 404, success: false, message: "Student not found" });
+    if (!student) return next(createError(404, `Student not found`));
     sendResponse(res, { message: "Student fetched successfully", data: student });
 });
 
 // DELETE
 export const deleteStudent = asyncHandler(async (req, res) => {
     const student = await Student.findByIdAndDelete(req.params.id);
-    if (!student) return sendResponse(res, { status: 404, success: false, message: "Student not found" });
+    if (!student) return next(createError(404, `Student not found`));
     sendResponse(res, { message: "Student deleted successfully" });
 });
 
 // PUT
 export const updateStudent = asyncHandler(async (req, res) => {
     const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!student) return sendResponse(res, { status: 404, success: false, message: "Student not found", });
+    if (!student) return sendResponse(res, { status: 404, success: false, message: "Student not found" });
     sendResponse(res, { message: "Student updated successfully", data: student });
 });
 
@@ -35,10 +36,13 @@ export const updateStudent = asyncHandler(async (req, res) => {
 // =createdAt = get first created
 // -createdAt = get last created
 export const getStudents = asyncHandler(async (req, res) => {
-    let { page = 1, limit = 10, sort = "-createdAt", fields, ...filters } = req.query;
+    let { page = 1, limit = 10, sort = "-createdAt", fields,name, ...filters } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
     const skip = (page - 1) * limit;
+     if (name) {
+    filters.name = { $regex: name, $options: "i" }; // 'i' makes it case-insensitive
+}
     let query = Student.find(filters);
     query = query.sort(sort).skip(skip).limit(limit);
     if (fields) query = query.select(fields.replace(",", " "));
@@ -50,3 +54,4 @@ export const getStudents = asyncHandler(async (req, res) => {
         meta: { total, page, pages, limit },
     });
 });
+
