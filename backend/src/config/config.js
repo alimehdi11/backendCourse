@@ -12,7 +12,10 @@ const _config = {
     DB_URL: process.env.DB_URL,
     NODE_ENV,
     FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN,
+<<<<<<< HEAD:backend/src/config/config.js
     JWT_SECRET: process.env.JWT_SECRET,
+=======
+>>>>>>> cb58e8f4022f2acab5a132faf8efb26164da8088:src/config/config.js
 };
 
 export const config = Object.freeze(_config);

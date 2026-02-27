@@ -5,11 +5,18 @@ import { config } from "./src/config/config.js";
 import { errorHandler } from "./src/middlewares/errorMiddleware.js";
 import bookRouter from "./src/features/book/bookRouter.js";
 import cors from "cors";
+<<<<<<< HEAD:backend/index.js
 import userRouter from "./src/features/users/userRouter.js";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: config.FRONTEND_ORIGIN }));
+=======
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({origin: config.FRONTEND_ORIGIN}));
+>>>>>>> cb58e8f4022f2acab5a132faf8efb26164da8088:index.js
 const PORT = config.PORT;
 
 /* ==============================
