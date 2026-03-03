@@ -51,18 +51,20 @@ const BookTable = ({ books, meta, page, limit, onChangePage }) => {
   ];
 
   return (
+    <div className="mt-5">
     <Table
-      columns={bookColumns}
-      rowKey="_id"
-      dataSource={books}
-      pagination={{
-        current: page,
-        pageSize: limit,
-        total: meta.total,
-        onChange: (p, l) => onChangePage(p, l),
-        showSizeChanger: true,
-      }}
+    columns={bookColumns}
+    rowKey="_id"
+    dataSource={books}
+    pagination={{
+      current: page,
+      pageSize: limit,
+      total: meta.total,
+      onChange: (p, l) => onChangePage(p, l),
+      showSizeChanger: true,
+    }}
     />
+    </div>
   );
 };
 
