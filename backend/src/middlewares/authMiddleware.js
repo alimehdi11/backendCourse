@@ -1,36 +1,35 @@
 import jwt from "jsonwebtoken";
-import User from "../features/users/userModel.js"; // Mongoose User model
+import createError from "http-errors";
+import User from "../features/users/userModel.js";
 import { asyncHandler } from "../utils/helperFunctions.js";
 import { config } from "../config/config.js";
 
-
-const authMiddleware = asyncHandler(async (req, res, next) => {
+const authMiddleware = asyncHandler(async (req, _res, next) => {
     let token;
 
-    // 1️⃣ Check Authorization header
-    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")
-    ) {
-        try {
-            // Get token from header
-            token = req.headers.authorization.split(" ")[1];
-
-            // Verify token
-            const decoded = jwt.verify(token, config.JWT_SECRET);
-
-            // Attach user to request
-            req.user = await User.findById(decoded.id).select("-password");
-
-            next();
-        } catch (error) {
-            console.error(error);
-            res.status(401);
-            throw new Error("Not authorized, token failed");
-        }
+    if (!req.headers.authorization?.startsWith("Bearer")) {
+        return next(createError(401, "Not authorized, no token"));
     }
 
-    if (!token) {
-        res.status(401);
-        throw new Error("Not authorized, no token");
+    token = req.headers.authorization.split(" ")[1];
+
+    try {
+        const decoded = jwt.verify(token, config.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return next(createError(401, "User not found"));
+        }
+
+        req.user = user;
+        return next();
+
+    } catch (error) {
+        if (error.name === "TokenExpiredError") {
+            return next(createError(401, "Token expired"));
+        }
+
+        return next(createError(401, "Invalid token"));
     }
 });
 
